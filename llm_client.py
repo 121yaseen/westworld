@@ -14,7 +14,7 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 MODEL_NAME = "gemini-2.5-flash"
 
 
-def call_llm(prompt: str, json_mode: bool = False) -> str:
+def call_llm(prompt: str, json_mode: bool = False, web_search: bool = False, stop_sequences: list = None) -> str:
     """Helper to call Gemini API."""
     if not GEMINI_API_KEY or not HAS_GENAI:
         return ""
@@ -23,11 +23,19 @@ def call_llm(prompt: str, json_mode: bool = False) -> str:
         if not hasattr(call_llm, "client"):
             call_llm.client = genai.Client(api_key=GEMINI_API_KEY)
             
-        config = None
+        config = types.GenerateContentConfig(
+            stop_sequences=stop_sequences
+        )
+
         if json_mode:
-            config = types.GenerateContentConfig(
-                response_mime_type="application/json"
+             config.response_mime_type = "application/json"
+        
+        if web_search:
+            # Enable Google Search Grounding
+            google_search_tool = types.Tool(
+                google_search=types.GoogleSearch()
             )
+            config.tools = [google_search_tool]
 
         response = call_llm.client.models.generate_content(
             model=MODEL_NAME,

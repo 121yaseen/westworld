@@ -115,6 +115,20 @@ def main() -> None:
     parser.add_argument("--theme", type=str, choices=["westworld", "harrypotter"], help="Pre-select theme")
     args = parser.parse_args()
 
+    # Mode Selection
+    print("\nSelect Simulation Mode:")
+    print("1. Westworld Adventure (Game Mode)")
+    print("2. Extreme Debate (Atheists vs Believers)")
+    try:
+        mode_choice = input("Enter choice (1 or 2): ").strip()
+    except EOFError:
+        mode_choice = "1"
+        
+    if mode_choice == "2":
+        from debate_sim import run_debate_sim
+        run_debate_sim(args.turns)
+        return
+
     if not GEMINI_API_KEY:
         print("\n⚠️  WARNING: GEMINI_API_KEY is not set. The simulation will run in logic-fallback mode.")
     else:
