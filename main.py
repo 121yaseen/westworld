@@ -119,14 +119,19 @@ def main() -> None:
     print("\nSelect Simulation Mode:")
     print("1. Westworld Adventure (Game Mode)")
     print("2. Extreme Debate (Atheists vs Believers)")
+    print("3. Chess vs Computer (Pre-AI Engine)")
     try:
-        mode_choice = input("Enter choice (1 or 2): ").strip()
+        mode_choice = input("Enter choice (1-3): ").strip()
     except EOFError:
         mode_choice = "1"
         
     if mode_choice == "2":
         from debate_sim import run_debate_sim
         run_debate_sim(args.turns)
+        return
+    elif mode_choice == "3":
+        from chess_sim import run_chess_sim
+        run_chess_sim()
         return
 
     if not GEMINI_API_KEY:
